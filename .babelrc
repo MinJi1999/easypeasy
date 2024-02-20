@@ -1,0 +1,13 @@
+{
+  "env": {
+    "development": {
+      "plugins": [["styled-components", { "displayName": true }]],
+      "presets": ["react-app"]
+    },
+    "production": {
+      "plugins": [["styled-components", { "displayName": true }]],
+      "presets": ["react-app"]
+    }
+  },
+  "plugins": [["styled-components", { "displayName": true }]]
+}
