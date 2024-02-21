@@ -69,3 +69,8 @@ export const DateText = styled.div<{ current: boolean }>`
   background-color: ${({ current }) => (current ? "tomato" : "default")};
   border-radius: 50%;
 `;
+
+
+export const SiderYearTitle = styled.div`
+  
+`

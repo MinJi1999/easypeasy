@@ -10,7 +10,7 @@ export interface SelectedDateType {
 }
 
 export interface CalendarArrayType {
-  key: number;
+  key: number | null;
   date: string;
   todo: {
     startTime: string;

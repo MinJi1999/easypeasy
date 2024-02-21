@@ -75,37 +75,24 @@ export default function Calendar() {
 
   // 총 일수 구하기
   const settingDays = (month: number) => {
-    const testDate = new Date(year, month, 0);
-    console.log(month, "month");
-    console.log(testDate.getDate(), "나선형 은하");
-    return testDate.getDate();
-    // 31일인 달 1,3,5,7,8,10,12
-    // 30일인 달 4, 6, 9,11
-    // if (month === 4 || month === 6 || month === 9 || month === 11) {
-    //   return 30;
-    // } else if (year % 4 === 0 && month === 2) {
-    //   return 29;
-    // } else if (month === 2) {
-    //   return 28;
-    // } else {
-    //   return 31;
-    // }
+    const currentDate = new Date(year, month, 0);
+    return currentDate.getDate();
   };
 
   // 현 달력에 들어갈 날짜 array 구하기
   const settingDates = (month: number, dates: number) => {
     const curDate = new Date(`${year}-${month}-1`);
-    // // 현재 월의 1일의 요일...
+    // 현재 월의 1일의 요일...
     const firstDay = curDate.getDay() - 1;
     const prevMonth = prevMonthDates(firstDay);
     const curMonthArr = Array.from({ length: dates }, (v, i) => i + 1);
     const curMonth = settingDayData(curMonthArr, month, year);
     const nextMonth = nextMonthDates();
     const result = prevMonth.concat(curMonth, nextMonth);
-    // 여기다가 만든 함수를 넣고 최종 setWholeDates에 넣어줘야 함
     setWholeDates(result);
   };
 
+  // 해당 월이 수요일부터 시작이면 채워야 하는 월화수에 해당하는 전 월의 날짜.
   function prevMonthDates(firstDay: number): CalendarArrayType[] {
     const prevMonth = month - 1;
     const prevWholeDates = settingDays(prevMonth);
@@ -117,6 +104,7 @@ export default function Calendar() {
     return result;
   }
 
+  // 해당 월이 수요일에서 끝나면 채워야 하는 목금토에 해당하는 다음 월의 날짜.
   function nextMonthDates() {
     const nextMonth = month + 1;
     const date = new Date(`${year}-${nextMonth}-1`);
