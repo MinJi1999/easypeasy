@@ -1,9 +1,6 @@
 import React from "react";
 import { CalendarArrayType } from "../../type/calendarType";
-import {
-  ModalBackground,
-  ModalContainer,
-} from "../../resource/styled/DateModal";
+import { ModalBackground, ModalContainer } from "../../styled/DateModal";
 
 interface PropsType {
   info: CalendarArrayType;

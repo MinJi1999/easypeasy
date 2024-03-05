@@ -70,7 +70,30 @@ export const DateText = styled.div<{ current: boolean }>`
   border-radius: 50%;
 `;
 
-
 export const SiderYearTitle = styled.div`
-  
-`
+  display: inline-block;
+  font-size: 40px;
+  font-weight: 600;
+  color: yellow;
+  opacity: 0.8;
+  margin-bottom: 10px;
+`;
+
+export const SideMonthTitle = styled.div`
+  display: inline-block;
+  font-size: 40px;
+  font-weight: 600;
+  color: yellow;
+`;
+
+export const SideDateTitle = styled.div`
+  display: inline-block;
+  font-size: 40px;
+  font-weight: 600;
+  color: yellow;
+`;
+
+export const SubmitBtn = styled.button`
+  width: 15px;
+  height: 15px;
+`;

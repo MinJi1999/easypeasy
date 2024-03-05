@@ -1,5 +1,5 @@
 export interface CalendarType {
-  calendar: [];
+  calendar: {};
   selectedDate: CalendarArrayType;
 }
 

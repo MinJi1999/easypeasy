@@ -66,7 +66,7 @@ export const settingDayData = (days: number[], month: number, year: number) => {
   const result = days.map((date: number, index: number) => {
     return {
       key: index,
-      date: `${year}-${month}-${date}`, // 세팅 됐고 담엔.. 일 클릭했을 때 대충 모달 띄우고 투두 입력하는거 해볼까?
+      date: `${year}-${month}-${date}`,
       todo: [
         // {
         //   startTime: "",
@@ -76,30 +76,30 @@ export const settingDayData = (days: number[], month: number, year: number) => {
         //   done: false,
         //   important: false,
         // },
-        {
-          startTime: "18:00",
-          endTime: "21:00",
-          title: "친구 생일파티",
-          content: "드레스 코드 블랙",
-          done: false,
-          important: false,
-        },
-        {
-          startTime: "19:30",
-          endTime: "22:00",
-          title: "나무 위의 군대 연극",
-          content: "너무 떨려",
-          done: true, // 내일은 투두 입력, checked 반응,  기획서 변경되어야 함. 기획서에서의 데이터 구조가 이상함.
-          important: true,
-        },
-        {
-          startTime: "19:30",
-          endTime: "22:00",
-          title: "나무 위의 군대 연극 2차 관람",
-          content: "오늘도 눈에 잘 담자",
-          done: false,
-          important: true,
-        },
+        // {
+        //   startTime: "18:00",
+        //   endTime: "21:00",
+        //   title: "친구 생일파티",
+        //   content: "드레스 코드 블랙",
+        //   done: false,
+        //   important: false,
+        // },
+        // {
+        //   startTime: "19:30",
+        //   endTime: "22:00",
+        //   title: "나무 위의 군대 연극",
+        //   content: "너무 떨려",
+        //   done: true, // 내일은 투두 입력, checked 반응,  기획서 변경되어야 함. 기획서에서의 데이터 구조가 이상함.
+        //   important: true,
+        // },
+        // {
+        //   startTime: "19:30",
+        //   endTime: "22:00",
+        //   title: "나무 위의 군대 연극 2차 관람",
+        //   content: "오늘도 눈에 잘 담자",
+        //   done: false,
+        //   important: true,
+        // },
       ],
     };
   });

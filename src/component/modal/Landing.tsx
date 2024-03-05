@@ -1,5 +1,5 @@
 import React from "react";
 
-export default function Landing() {
+export default function F() {
   return <div>Landing</div>;
 }

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { DateBox, DateText } from "../resource/styled/CalendarStyled";
+import { DateBox, DateText } from "../styled/CalendarStyled";
 import { CalendarArrayType } from "../type/calendarType";
 import DateModal from "./modal/DateModal";
-import { setSeletedDate } from "../redux/couter/calenderSlice";
+import { setSelectedDate } from "../redux/couter/calenderSlice";
 import { useDispatch } from "react-redux";
 
 interface PropsType {
@@ -25,13 +25,13 @@ export default function Dates(props: PropsType) {
 
   useEffect(() => {
     if (today === info.date) {
-      dispatch(setSeletedDate({ ...info }));
+      dispatch(setSelectedDate({ ...info }));
     }
   }, [info]);
 
   const onCickEvent = () => {
     // setModalOpen(true);
-    dispatch(setSeletedDate({ ...info }));
+    dispatch(setSelectedDate({ ...info }));
   };
 
   return (

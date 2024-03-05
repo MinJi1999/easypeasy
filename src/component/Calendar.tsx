@@ -3,23 +3,23 @@ import {
   CalendarContainer,
   CalendarTitle,
   Container,
-  DateBox,
-  DateText,
+  // DateBox,
+  // DateText,
   DayBox,
   DaysContainer,
   LeftArrow,
   RightArrow,
-} from "../resource/styled/CalendarStyled";
+} from "../styled/CalendarStyled";
 import { useAppDispatch, useAppSelector } from "../redux/hook";
-import { setSeletedDate } from "../redux/couter/calenderSlice";
-import { RootState } from "../redux/store";
+// import { setSeletedDate } from "../redux/couter/calenderSlice";
+// import { RootState } from "../redux/store";
 import { settingDayData } from "../resource/data/tmpData";
 import Dates from "./Dates";
 import { CalendarArrayType } from "../type/calendarType";
 // interface
 
 export default function Calendar() {
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
   // 현재 날짜 ex) 12
   const [date, setDate] = useState(0);
   const [year, setYear] = useState(0);
@@ -89,6 +89,10 @@ export default function Calendar() {
     const curMonth = settingDayData(curMonthArr, month, year);
     const nextMonth = nextMonthDates();
     const result = prevMonth.concat(curMonth, nextMonth);
+    console.log(
+      result,
+      "여기 키가 중복이 됨 그럼 안돼!! 음 인덱스와 맞춰서 들어가야 할 것 같은데 마지막에 세팅을 쫙 할 수도 없고"
+    );
     setWholeDates(result);
   };
 
@@ -121,13 +125,6 @@ export default function Calendar() {
     <Container>
       <CalendarContainer>
         <CalendarTitle>
-          {/* <button
-          onClick={() =>
-            dispatch(
-              setSeletedDate({ key: 1022, date: "2023-05-12", todo: [] })
-            )
-          }
-        ></button> */}
           <div style={{ fontSize: 25 }}>
             <LeftArrow onClick={settingPrevDate}>왼</LeftArrow>
             {year}
