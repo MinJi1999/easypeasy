@@ -72,7 +72,7 @@ export const DateText = styled.div<{ current: boolean }>`
 
 export const SiderYearTitle = styled.div`
   display: inline-block;
-  font-size: 40px;
+  font-size: 79px;
   font-weight: 600;
   color: yellow;
   opacity: 0.8;

@@ -13,21 +13,23 @@ import {
 import { useAppDispatch, useAppSelector } from "../redux/hook";
 // import { setSeletedDate } from "../redux/couter/calenderSlice";
 // import { RootState } from "../redux/store";
-import { settingDayData } from "../resource/data/tmpData";
+import { settingDayData, todoDays } from "../resource/data/tmpData";
 import Dates from "./Dates";
 import { CalendarArrayType } from "../type/calendarType";
-// interface
+import { setCalendarList } from "../redux/couter/calenderSlice";
+interface DateObjectT {
+  [key: string]: CalendarArrayType;
+}
 
 export default function Calendar() {
-  // const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
   // 현재 날짜 ex) 12
-  const [date, setDate] = useState(0);
+  // const [date, setDate] = useState(0);
   const [year, setYear] = useState(0);
   const [month, setMonth] = useState(0);
-  // 현재 month의 총 일수
-  const [wholeDates, setWholeDates] = useState<any>([]);
 
-  const selectedDate = useAppSelector((state) => state.calendar.selectedDate);
+  // 현재 month의 총 일수
+  const [wholeDates, setWholeDates] = useState<DateObjectT>({});
 
   useEffect(() => {
     setInitial();
@@ -41,7 +43,7 @@ export default function Calendar() {
     const date = day.getDate();
     setYear(year);
     setMonth(month + 1);
-    setDate(date);
+    // setDate(date);
   };
 
   //월이 달라짐에 따라 월의 총 일수도 변경
@@ -81,7 +83,7 @@ export default function Calendar() {
 
   // 현 달력에 들어갈 날짜 array 구하기
   const settingDates = (month: number, dates: number) => {
-    const curDate = new Date(`${year}-${month}-1`);
+    const curDate = new Date(`${year}-${month}-01`);
     // 현재 월의 1일의 요일...
     const firstDay = curDate.getDay() - 1;
     const prevMonth = prevMonthDates(firstDay);
@@ -89,11 +91,18 @@ export default function Calendar() {
     const curMonth = settingDayData(curMonthArr, month, year);
     const nextMonth = nextMonthDates();
     const result = prevMonth.concat(curMonth, nextMonth);
-    console.log(
-      result,
-      "여기 키가 중복이 됨 그럼 안돼!! 음 인덱스와 맞춰서 들어가야 할 것 같은데 마지막에 세팅을 쫙 할 수도 없고"
-    );
-    setWholeDates(result);
+    // 여기서 일정들을 초기 세팅?ㅇㅇ or 그때그때 selected 바뀔 때 todo가 있으면 세팅..?
+    const realResult = result.map((li: CalendarArrayType) => {
+      return !!todoDays[li.date] ? { ...li, ...todoDays[li.date] } : li;
+    });
+    //투두 위에 데이터들 객체 형식으로 바꿔주기 사실 마지막에 객체로 바꿔주는 것도 낫배드?
+    const dateObj: DateObjectT = {};
+    realResult.forEach((date) => {
+      dateObj[date.key] = date;
+    });
+    // 등록한 애들만 list 저장한다며
+    // dispatch(setCalendarList({ ...dateObj, ...todoDays }));
+    setWholeDates({ ...dateObj, ...todoDays });
   };
 
   // 해당 월이 수요일부터 시작이면 채워야 하는 월화수에 해당하는 전 월의 날짜.
@@ -136,9 +145,11 @@ export default function Calendar() {
           {["일", "월", "화", "수", "목", "금", "토"].map((value) => (
             <DayBox key={value}>{value}</DayBox>
           ))}
-          {wholeDates.map((value: CalendarArrayType, index: number) => {
-            return <Dates key={index} info={value} curDate={date} />;
-          })}
+          {Object.values(wholeDates).map(
+            (value: CalendarArrayType, index: number) => {
+              return <Dates key={index} info={value} />;
+            }
+          )}
         </DaysContainer>
         {/* <input type="datetime-local" onChange={(e) => console.log(e, "e")} /> */}
       </CalendarContainer>

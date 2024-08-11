@@ -4,44 +4,53 @@ import { CalendarArrayType } from "../type/calendarType";
 import DateModal from "./modal/DateModal";
 import { setSelectedDate } from "../redux/couter/calenderSlice";
 import { useDispatch } from "react-redux";
+import { useAppSelector } from "../redux/hook";
 
 interface PropsType {
   info: CalendarArrayType;
-  curDate: number;
 }
 
 export default function Dates(props: PropsType) {
-  const { info, curDate } = props;
+  const { info } = props;
   const d = info.date.split("-");
-
   const dispatch = useDispatch();
-
-  const [modalOpen, setModalOpen] = useState(false);
-
-  const date = new Date();
-  const today = `${date.getFullYear()}-${
-    date.getMonth() + 1
-  }-${date.getDate()}`;
+  const selectedDate = useAppSelector((state) => state.calendar.selectedDate);
+  const calendarList = useAppSelector((state) => state.calendar.calendar);
 
   useEffect(() => {
-    if (today === info.date) {
-      dispatch(setSelectedDate({ ...info }));
-    }
+    const key = returnKey();
+    handleSelectedDate(key);
   }, [info]);
 
+  const returnKey = () => {
+    const date = new Date();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const resultDate = String(date.getDate()).padStart(2, "0");
+    return `${date.getFullYear()}-${month}-${resultDate}`;
+  };
+
   const onCickEvent = () => {
-    // setModalOpen(true);
-    dispatch(setSelectedDate({ ...info }));
+    const key = info.key;
+    handleSelectedDate(key);
+  };
+
+  const handleSelectedDate = (key: string) => {
+    const copiedInfo = { ...info };
+    if (key === copiedInfo.date) {
+      if (calendarList[key]) {
+        copiedInfo.todo = [...calendarList[key].todo];
+      }
+      dispatch(setSelectedDate({ ...copiedInfo }));
+    }
   };
 
   return (
     <>
       <DateBox onClick={() => onCickEvent()}>
-        <DateText current={today === info.date}>{d[d.length - 1]}</DateText>
+        <DateText current={selectedDate.date === info.date}>
+          {d[d.length - 1]}
+        </DateText>
       </DateBox>
-      {/* {modalOpen && (
-        <DateModal open={modalOpen} info={info} setModalOpen={setModalOpen} />
-      )} */}
     </>
   );
 }

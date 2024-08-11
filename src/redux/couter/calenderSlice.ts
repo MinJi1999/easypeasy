@@ -11,11 +11,7 @@ import _ from "lodash";
 
 const initialState: CalendarType = {
   calendar: {},
-  selectedDate: {
-    key: null,
-    date: "0000-00-00",
-    todo: [],
-  },
+  selectedDate: { key: "", date: "", todo: [] },
 };
 
 export const calendarSlice = createSlice({
@@ -24,14 +20,12 @@ export const calendarSlice = createSlice({
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
     setCalendarList: (state, action) => {
-      const payload: { key: number; value: {} } = action.payload;
-      Object.assign(state.calendar, payload);
+      const payload = action.payload;
+      state.calendar = { ...state.calendar, ...payload };
     },
     setSelectedDate: (state, action: PayloadAction<CalendarArrayType>) => {
       const { payload } = action;
-      // const copied: any = _.cloneDeep(state.calendar);
       if (payload.key) {
-        // copied[payload.key] = { ...payload };
         state.selectedDate = { ...payload };
       }
     },
