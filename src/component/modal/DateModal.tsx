@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { CalendarArrayType, TodoT } from "../../type/calendarType";
 import { ModalBackground, ModalContainer } from "../../styled/DateModal";
-import { initialSelectDate } from "../../resource/data/tmpData";
+import { initialSelectDate, sortList } from "../../resource/data/tmpData";
 import { useAppDispatch, useAppSelector } from "../../redux/hook";
 import {
   setCalendarList,
@@ -106,21 +106,18 @@ export default function DateModal(props: PropsType) {
         ...resultTodoObj.todo[prevTodoIdx],
         ...copiedTodo,
       };
-      resultTodoObj.todo = copiedPrevTodos;
+      resultTodoObj.todo = sortList(copiedPrevTodos);
     } else {
       const newKey = resultTodoObj.todo.length;
       copiedTodo["key"] = newKey;
-      resultTodoObj["todo"] = [...resultTodoObj["todo"], copiedTodo];
+      resultTodoObj["todo"] = sortList([...resultTodoObj["todo"], copiedTodo]);
     }
-
-    // resultTodoObj["date"] = copiedTodo.date;
-    // resultTodoObj["key"] = copiedTodo.date;
     const calendarResult: Record<string, CalendarArrayType> = {};
     calendarResult[copiedTodo.date] = resultTodoObj;
     dispatch(setCalendarList(calendarResult));
     console.log("3");
     dispatch(setSelectedDate(resultTodoObj));
-  };
+  }; // 내일은 날짜 오류
 
   return (
     open && (

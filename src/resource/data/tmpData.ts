@@ -1,4 +1,4 @@
-import { CalendarArrayType } from "../../type/calendarType";
+import { CalendarArrayType, TodoT } from "../../type/calendarType";
 // ㅅㅂ 이런 객체는 타입을 어케 매겨야됨?
 export const todoDays: any = {
   "2024-07-06": {
@@ -136,4 +136,12 @@ export const returnDateTime = () => {
 
 function fillZero(num: number) {
   return String(num).padStart(2, "0");
+}
+
+export function sortList(arr: TodoT[]) {
+  const copied = [...arr];
+  copied.sort((a, b) => {
+    return a.time < b.time ? -1 : 1;
+  });
+  return copied;
 }
