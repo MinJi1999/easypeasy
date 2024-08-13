@@ -92,9 +92,6 @@ export default function DateModal(props: PropsType) {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     key: string
   ) => {
-    // 1. todo는 일단 배열을 유지. 수정 시엔 동일 key를 찾아서 arr[idx] = result로
-    // 2. 생성할 때는 이전의 todo를 깔아주고 뒤에 push해주는 형태
-    // 3. 해당 result를 calendarList에도 깔아준다.
     const resultTodoObj = { ...selectedDate };
     const copiedTodo = { ...dateInfo };
     const prevTodoIdx = resultTodoObj.todo.findIndex(
@@ -115,15 +112,80 @@ export default function DateModal(props: PropsType) {
     const calendarResult: Record<string, CalendarArrayType> = {};
     calendarResult[copiedTodo.date] = resultTodoObj;
     dispatch(setCalendarList(calendarResult));
-    console.log("3");
     dispatch(setSelectedDate(resultTodoObj));
   }; // 내일은 날짜 오류
-
+  console.log(dateInfo, "??");
   return (
     open && (
       <ModalBackground className="modal-bg" onClick={(e) => closeModal(e)}>
         <ModalContainer>
-          <span>{info.important ? "★" : "☆"}</span>
+          <input
+            type="checkbox"
+            onChange={() => {
+              const resultTodoObj = { ...selectedDate };
+              const copiedTodo = {
+                ...dateInfo,
+                done: !dateInfo.done,
+              };
+              const prevTodoIdx = resultTodoObj.todo.findIndex(
+                (todo) => todo.key === info.key
+              );
+              if (prevTodoIdx >= 0) {
+                const copiedPrevTodos = [...resultTodoObj.todo];
+                copiedPrevTodos[prevTodoIdx] = {
+                  ...resultTodoObj.todo[prevTodoIdx],
+                  ...copiedTodo,
+                };
+                resultTodoObj.todo = sortList(copiedPrevTodos);
+              } else {
+                const newKey = resultTodoObj.todo.length;
+                copiedTodo["key"] = newKey;
+                resultTodoObj["todo"] = sortList([
+                  ...resultTodoObj["todo"],
+                  copiedTodo,
+                ]);
+              }
+              const calendarResult: Record<string, CalendarArrayType> = {};
+              calendarResult[copiedTodo.date] = resultTodoObj;
+              dispatch(setCalendarList(calendarResult));
+              dispatch(setSelectedDate(resultTodoObj));
+              setDateInfo(copiedTodo);
+            }}
+          />
+          <span
+            onClick={() => {
+              const resultTodoObj = { ...selectedDate };
+              const copiedTodo = {
+                ...dateInfo,
+                important: !dateInfo.important,
+              };
+              const prevTodoIdx = resultTodoObj.todo.findIndex(
+                (todo) => todo.key === info.key
+              );
+              if (prevTodoIdx >= 0) {
+                const copiedPrevTodos = [...resultTodoObj.todo];
+                copiedPrevTodos[prevTodoIdx] = {
+                  ...resultTodoObj.todo[prevTodoIdx],
+                  ...copiedTodo,
+                };
+                resultTodoObj.todo = sortList(copiedPrevTodos);
+              } else {
+                const newKey = resultTodoObj.todo.length;
+                copiedTodo["key"] = newKey;
+                resultTodoObj["todo"] = sortList([
+                  ...resultTodoObj["todo"],
+                  copiedTodo,
+                ]);
+              }
+              const calendarResult: Record<string, CalendarArrayType> = {};
+              calendarResult[copiedTodo.date] = resultTodoObj;
+              dispatch(setCalendarList(calendarResult));
+              dispatch(setSelectedDate(resultTodoObj));
+              setDateInfo(copiedTodo);
+            }}
+          >
+            {dateInfo.important ? "★" : "☆"}
+          </span>
           {!isEditMode ? (
             <div
               style={{ fontSize: 30, fontWeight: 600 }}

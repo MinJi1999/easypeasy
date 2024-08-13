@@ -128,6 +128,7 @@ export default function Sider() {
               setModalOpen(true);
               setmodalInfo(() => ({ ...value, key: idx }));
             }}
+            style={{ textDecorationLine: value.done ? "line-through" : "none" }}
           >
             <span
               style={{
@@ -137,6 +138,7 @@ export default function Sider() {
                 marginRight: 15,
               }}
             >
+              {value.important ? "★" : "☆"}
               {value.time}
             </span>
             {value.title}
