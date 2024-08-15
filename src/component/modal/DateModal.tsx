@@ -42,28 +42,12 @@ export default function DateModal(props: PropsType) {
   const calendarList = useAppSelector((state) => state.calendar.calendar);
 
   useEffect(() => {
-    const { date, time } = info;
-    const currentDate = new Date(`${date} ${time}`);
-    const year = currentDate.getFullYear();
-    const month = currentDate.getMonth() + 1;
-    const day = currentDate.getDate();
-    const minutes = currentDate.getMinutes();
-    const hours = currentDate.getHours();
-    const sec = currentDate.getSeconds();
-
-    // if (dateRef.current && timeRef.current) {
-    //   dateRef.current.defaultValue = `${year}-${fillZero(month)}-${fillZero(
-    //     day
-    //   )}`;
-    //   timeRef.current.defaultValue = `${fillZero(date.time.hour)}:${fillZero(
-    //     date.time.minutes
-    //   )}:${fillZero(date.time.seconds)}`;
-    // }
-
     setDateInfo(() => ({
       ...info,
     }));
   }, [info, open]);
+
+  useEffect(() => {}, [dateInfo]);
 
   function fillZero(num: number) {
     return String(num).padStart(2, "0");
@@ -76,33 +60,37 @@ export default function DateModal(props: PropsType) {
     }
   };
 
-  const handleDateInfo = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    key: string
-  ) => {
-    const value = e.target.value;
+  const handleDateInfo = (value: boolean | string, key: string) => {
     setDateInfo((prev) => {
       const copied = { ...prev };
       copied[key] = value;
       return copied;
     });
   };
-
-  const callDispatch = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    key: string
-  ) => {
+  const callDispatch = (value?: any, key?: string) => {
     const resultTodoObj = { ...selectedDate };
+    console.log(resultTodoObj.todo, "sort가 안되어잇는..?");
     const copiedTodo = { ...dateInfo };
+    if (!!key) {
+      copiedTodo[key] = value;
+    }
     const prevTodoIdx = resultTodoObj.todo.findIndex(
       (todo) => todo.key === info.key
     );
     if (prevTodoIdx >= 0) {
       const copiedPrevTodos = [...resultTodoObj.todo];
+      // console.log(copiedTodo, "second");
       copiedPrevTodos[prevTodoIdx] = {
         ...resultTodoObj.todo[prevTodoIdx],
         ...copiedTodo,
       };
+      // console.log(
+      //   {
+      //     ...resultTodoObj.todo[prevTodoIdx],
+      //     ...copiedTodo,
+      //   },
+      //   "result"
+      // );
       resultTodoObj.todo = sortList(copiedPrevTodos);
     } else {
       const newKey = resultTodoObj.todo.length;
@@ -113,82 +101,37 @@ export default function DateModal(props: PropsType) {
     calendarResult[copiedTodo.date] = resultTodoObj;
     dispatch(setCalendarList(calendarResult));
     dispatch(setSelectedDate(resultTodoObj));
-  }; // 내일은 날짜 오류
-  console.log(dateInfo, "??");
+  };
+  // 날짜오류 체크! 로컬 스토리지에 데이터 저장하고 로드하는 거 해보까/
   return (
     open && (
       <ModalBackground className="modal-bg" onClick={(e) => closeModal(e)}>
         <ModalContainer>
           <input
             type="checkbox"
-            onChange={() => {
-              const resultTodoObj = { ...selectedDate };
-              const copiedTodo = {
-                ...dateInfo,
-                done: !dateInfo.done,
-              };
-              const prevTodoIdx = resultTodoObj.todo.findIndex(
-                (todo) => todo.key === info.key
-              );
-              if (prevTodoIdx >= 0) {
-                const copiedPrevTodos = [...resultTodoObj.todo];
-                copiedPrevTodos[prevTodoIdx] = {
-                  ...resultTodoObj.todo[prevTodoIdx],
-                  ...copiedTodo,
-                };
-                resultTodoObj.todo = sortList(copiedPrevTodos);
-              } else {
-                const newKey = resultTodoObj.todo.length;
-                copiedTodo["key"] = newKey;
-                resultTodoObj["todo"] = sortList([
-                  ...resultTodoObj["todo"],
-                  copiedTodo,
-                ]);
-              }
-              const calendarResult: Record<string, CalendarArrayType> = {};
-              calendarResult[copiedTodo.date] = resultTodoObj;
-              dispatch(setCalendarList(calendarResult));
-              dispatch(setSelectedDate(resultTodoObj));
-              setDateInfo(copiedTodo);
+            onChange={(e) => {
+              callDispatch(!dateInfo.done, "done");
+              handleDateInfo(e.target.checked, "done");
             }}
           />
           <span
             onClick={() => {
-              const resultTodoObj = { ...selectedDate };
-              const copiedTodo = {
-                ...dateInfo,
-                important: !dateInfo.important,
-              };
-              const prevTodoIdx = resultTodoObj.todo.findIndex(
-                (todo) => todo.key === info.key
-              );
-              if (prevTodoIdx >= 0) {
-                const copiedPrevTodos = [...resultTodoObj.todo];
-                copiedPrevTodos[prevTodoIdx] = {
-                  ...resultTodoObj.todo[prevTodoIdx],
-                  ...copiedTodo,
-                };
-                resultTodoObj.todo = sortList(copiedPrevTodos);
-              } else {
-                const newKey = resultTodoObj.todo.length;
-                copiedTodo["key"] = newKey;
-                resultTodoObj["todo"] = sortList([
-                  ...resultTodoObj["todo"],
-                  copiedTodo,
-                ]);
-              }
-              const calendarResult: Record<string, CalendarArrayType> = {};
-              calendarResult[copiedTodo.date] = resultTodoObj;
-              dispatch(setCalendarList(calendarResult));
-              dispatch(setSelectedDate(resultTodoObj));
-              setDateInfo(copiedTodo);
+              callDispatch(!dateInfo.important, "important");
+              setDateInfo((prev) => {
+                prev["important"] = !prev.important;
+                return prev;
+              });
             }}
           >
             {dateInfo.important ? "★" : "☆"}
           </span>
           {!isEditMode ? (
             <div
-              style={{ fontSize: 30, fontWeight: 600 }}
+              style={{
+                fontSize: 30,
+                fontWeight: 600,
+                textDecorationLine: dateInfo.done ? "line-through" : "none",
+              }}
               onClick={() => setIsEditMode((prev) => !prev)}
             >
               {dateInfo.title}
@@ -198,10 +141,10 @@ export default function DateModal(props: PropsType) {
               // defaultValue={info.title}
               onBlur={(e) => {
                 setIsEditMode(false);
-                callDispatch(e, "title");
+                callDispatch();
               }}
               value={dateInfo.title}
-              onChange={(e) => handleDateInfo(e, "title")}
+              onChange={(e) => handleDateInfo(e.target.value, "title")}
             />
           )}
           <div>{info.startTime}</div>
@@ -210,18 +153,18 @@ export default function DateModal(props: PropsType) {
             readOnly
             value={dateInfo.date}
             // onChange={(e) => handleDateInfo(e, "date")}
-            // onBlur={(e) => callDispatch(e, "date")}
+            // onBlur={(e) => callDispatch()}
           />
           <input
             type="time"
             value={dateInfo.time}
-            onChange={(e) => handleDateInfo(e, "time")}
-            onBlur={(e) => callDispatch(e, "time")}
+            onChange={(e) => handleDateInfo(e.target.value, "time")}
+            onBlur={(e) => callDispatch()}
           />
           <div>
             <textarea
-              onChange={(e) => handleDateInfo(e, "content")}
-              onBlur={(e) => callDispatch(e, "content")}
+              onChange={(e) => handleDateInfo(e.target.value, "content")}
+              onBlur={(e) => callDispatch()}
             />
           </div>
           <div>{info.content}</div>

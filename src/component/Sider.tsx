@@ -49,7 +49,7 @@ export default function Sider() {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalInfo, setmodalInfo] = useState(initialTodo);
 
-  // console.log(calendarList, "calendarList");
+  // console.log(selectedDate, "selectedDate");
   const insertTodo = () => {
     const copied = _.cloneDeep(selectedDate);
     if (todoInput.current) {

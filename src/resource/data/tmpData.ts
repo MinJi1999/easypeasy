@@ -143,5 +143,10 @@ export function sortList(arr: TodoT[]) {
   copied.sort((a, b) => {
     return a.time < b.time ? -1 : 1;
   });
-  return copied;
+  const arrayKey = copied.map((todo, idx) => {
+    const copiedTodo = { ...todo };
+    copiedTodo["key"] = idx;
+    return copiedTodo;
+  });
+  return arrayKey;
 }
