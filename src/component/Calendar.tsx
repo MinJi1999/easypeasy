@@ -17,6 +17,7 @@ import { settingDayData, todoDays } from "../resource/data/tmpData";
 import Dates from "./Dates";
 import { CalendarArrayType } from "../type/calendarType";
 import { setCalendarList } from "../redux/couter/calenderSlice";
+import { getLocalStorage, setLocalStorage } from "../util/function/saveData";
 interface DateObjectT {
   [key: string]: CalendarArrayType;
 }
@@ -33,6 +34,7 @@ export default function Calendar() {
 
   useEffect(() => {
     setInitial();
+    settingLocalStorage();
   }, []);
 
   // 초기 날짜 세팅
@@ -44,6 +46,14 @@ export default function Calendar() {
     setYear(year);
     setMonth(month + 1);
     // setDate(date);
+  };
+
+  const settingLocalStorage = () => {
+    const todo = getLocalStorage();
+    if (!!todo) {
+      const parsed = JSON.parse(todo);
+      dispatch(setCalendarList(parsed));
+    }
   };
 
   //월이 달라짐에 따라 월의 총 일수도 변경
@@ -91,18 +101,16 @@ export default function Calendar() {
     const curMonth = settingDayData(curMonthArr, month, year);
     const nextMonth = nextMonthDates();
     const result = prevMonth.concat(curMonth, nextMonth);
-    // 여기서 일정들을 초기 세팅?ㅇㅇ or 그때그때 selected 바뀔 때 todo가 있으면 세팅..?
     const realResult = result.map((li: CalendarArrayType) => {
       return !!todoDays[li.date] ? { ...li, ...todoDays[li.date] } : li;
     });
-    //투두 위에 데이터들 객체 형식으로 바꿔주기 사실 마지막에 객체로 바꿔주는 것도 낫배드?
     const dateObj: DateObjectT = {};
     realResult.forEach((date) => {
       dateObj[date.key] = date;
     });
     // 등록한 애들만 list 저장한다며
     // dispatch(setCalendarList({ ...dateObj, ...todoDays }));
-    setWholeDates({ ...dateObj, ...todoDays });
+    setWholeDates({ ...dateObj });
   };
 
   // 해당 월이 수요일부터 시작이면 채워야 하는 월화수에 해당하는 전 월의 날짜.

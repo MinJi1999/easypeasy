@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { CalendarArrayType, TodoT } from "../../type/calendarType";
 import { ModalBackground, ModalContainer } from "../../styled/DateModal";
-import { initialSelectDate, sortList } from "../../resource/data/tmpData";
+import { initialSelectDate } from "../../resource/data/tmpData";
 import { useAppDispatch, useAppSelector } from "../../redux/hook";
 import {
   setCalendarList,
   setSelectedDate,
 } from "../../redux/couter/calenderSlice";
+import { sortList } from "../../util/function/dateUtil";
 
 interface PropsType {
   info: TodoT;

@@ -12,14 +12,13 @@ import {
 import {
   initialSelectDate,
   initialTodo,
-  returnDateTime,
-  sortList,
-  todoDays,
   todoValueInit,
 } from "../resource/data/tmpData";
 import _ from "lodash";
 import { CalendarArrayType, TodoT } from "../type/calendarType";
 import DateModal from "./modal/DateModal";
+import { returnDateTime } from "../util/function/dateUtil";
+import { setLocalStorage } from "../util/function/saveData";
 const initialSelectedData = {
   key: "0000-00-00",
   date: "0000-00-00",
@@ -48,6 +47,12 @@ export default function Sider() {
   // const [selectDate, setselectDate] = useState(initialSelectDate);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalInfo, setmodalInfo] = useState(initialTodo);
+
+  useEffect(() => {
+    if (Object.values(calendarList).length) {
+      setLocalStorage(calendarList);
+    }
+  }, [calendarList]);
 
   // console.log(selectedDate, "selectedDate");
   const insertTodo = () => {
