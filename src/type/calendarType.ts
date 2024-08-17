@@ -30,3 +30,14 @@ export interface TodoT {
   important: boolean;
   key: number;
 }
+
+export interface DateInfoT {
+  [key: string]: string | boolean | number;
+  date: string;
+  time: string;
+  content: string;
+  title: string;
+  important: boolean;
+  done: boolean;
+  key: number;
+}

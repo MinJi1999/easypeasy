@@ -4,6 +4,7 @@ import {
   SideDateTitle,
   SideMonthTitle,
   SiderYearTitle,
+  TodoList,
 } from "../styled/CalendarStyled";
 import {
   setCalendarList,
@@ -15,9 +16,9 @@ import {
   todoValueInit,
 } from "../resource/data/tmpData";
 import _ from "lodash";
-import { CalendarArrayType, TodoT } from "../type/calendarType";
+import { CalendarArrayType, DateInfoT, TodoT } from "../type/calendarType";
 import DateModal from "./modal/DateModal";
-import { returnDateTime } from "../util/function/dateUtil";
+import { returnDateTime, sortList } from "../util/function/dateUtil";
 import { setLocalStorage } from "../util/function/saveData";
 const initialSelectedData = {
   key: "0000-00-00",
@@ -94,6 +95,42 @@ export default function Sider() {
     }
   };
 
+  const callDispatch = (value: any, key: string, dateInfo: DateInfoT) => {
+    console.log(value, `${key}`);
+    const resultTodoObj = { ...selectedDate };
+    const copiedTodo = { ...dateInfo };
+    if (!!key) {
+      copiedTodo[key] = value;
+    }
+    const prevTodoIdx = resultTodoObj.todo.findIndex(
+      (todo) => todo.key === copiedTodo.key
+    );
+    if (prevTodoIdx >= 0) {
+      const copiedPrevTodos = [...resultTodoObj.todo];
+      // console.log(copiedTodo, "second");
+      copiedPrevTodos[prevTodoIdx] = {
+        ...resultTodoObj.todo[prevTodoIdx],
+        ...copiedTodo,
+      };
+      // console.log(
+      //   {
+      //     ...resultTodoObj.todo[prevTodoIdx],
+      //     ...copiedTodo,
+      //   },
+      //   "result"
+      // );
+      resultTodoObj.todo = sortList(copiedPrevTodos);
+    } else {
+      const newKey = resultTodoObj.todo.length;
+      copiedTodo["key"] = newKey;
+      resultTodoObj["todo"] = sortList([...resultTodoObj["todo"], copiedTodo]);
+    }
+    const calendarResult: Record<string, CalendarArrayType> = {};
+    calendarResult[copiedTodo.date] = resultTodoObj;
+    dispatch(setCalendarList(calendarResult));
+    dispatch(setSelectedDate(resultTodoObj));
+  };
+
   return (
     <div
       style={{
@@ -127,9 +164,10 @@ export default function Sider() {
       </div>
       {selectedDate &&
         selectedDate?.todo.map((value, idx) => (
-          <div
+          <TodoList
             key={idx}
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               setModalOpen(true);
               setmodalInfo(() => ({ ...value, key: idx }));
             }}
@@ -141,20 +179,31 @@ export default function Sider() {
                 fontSize: 20,
                 fontWeight: 500,
                 marginRight: 15,
+                cursor: "pointer",
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+                callDispatch(!value.important, "important", value);
               }}
             >
               {value.important ? "★" : "☆"}
-              {value.time}
             </span>
-            {value.title}
-            <input type="checkbox" defaultChecked={value.done} />
+            {value.time} {value.title}
+            <input
+              type="checkbox"
+              defaultChecked={value.done}
+              onClick={(e) => e.stopPropagation()}
+              onChange={(e) => {
+                callDispatch(e.target.checked, "done", value);
+              }}
+            />
             <button
               className="sider-delete-button"
               onClick={() => deleteTodo(value)}
             >
               X
             </button>
-          </div>
+          </TodoList>
         ))}
       {modalOpen && (
         <DateModal

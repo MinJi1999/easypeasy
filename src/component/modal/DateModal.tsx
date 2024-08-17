@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { CalendarArrayType, TodoT } from "../../type/calendarType";
+import { CalendarArrayType, DateInfoT, TodoT } from "../../type/calendarType";
 import { ModalBackground, ModalContainer } from "../../styled/DateModal";
 import { initialSelectDate } from "../../resource/data/tmpData";
 import { useAppDispatch, useAppSelector } from "../../redux/hook";
@@ -13,17 +13,6 @@ interface PropsType {
   info: TodoT;
   open: boolean;
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-interface DateInfoT {
-  [key: string]: string | boolean | number;
-  date: string;
-  time: string;
-  content: string;
-  title: string;
-  important: boolean;
-  done: boolean;
-  key: number;
 }
 
 export default function DateModal(props: PropsType) {
@@ -70,7 +59,6 @@ export default function DateModal(props: PropsType) {
   };
   const callDispatch = (value?: any, key?: string) => {
     const resultTodoObj = { ...selectedDate };
-    console.log(resultTodoObj.todo, "sort가 안되어잇는..?");
     const copiedTodo = { ...dateInfo };
     if (!!key) {
       copiedTodo[key] = value;
@@ -103,7 +91,6 @@ export default function DateModal(props: PropsType) {
     dispatch(setCalendarList(calendarResult));
     dispatch(setSelectedDate(resultTodoObj));
   };
-  // 날짜오류 체크! 로컬 스토리지에 데이터 저장하고 로드하는 거 해보까/
   return (
     open && (
       <ModalBackground className="modal-bg" onClick={(e) => closeModal(e)}>

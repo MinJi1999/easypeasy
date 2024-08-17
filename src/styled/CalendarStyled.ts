@@ -97,3 +97,9 @@ export const SubmitBtn = styled.button`
   width: 15px;
   height: 15px;
 `;
+
+export const TodoList = styled.div`
+  &:hover {
+    background-color: #0000000d;
+  }
+`;
