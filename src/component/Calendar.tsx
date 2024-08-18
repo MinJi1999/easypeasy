@@ -48,7 +48,6 @@ export default function Calendar() {
 
   const checkShowLanding = () => {
     const isLandingCheck = localStorage.getItem("epLandingModalShow");
-
     if (!!isLandingCheck) {
       const parsed = JSON.parse(isLandingCheck);
       const savedDate = parsed.date;
