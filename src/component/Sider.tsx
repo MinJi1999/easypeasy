@@ -135,7 +135,6 @@ export default function Sider() {
     <div
       style={{
         width: 350,
-        height: "100%",
         backgroundColor: "tomato",
         display: "inline-block",
         padding: 20,
@@ -199,7 +198,10 @@ export default function Sider() {
             />
             <button
               className="sider-delete-button"
-              onClick={() => deleteTodo(value)}
+              onClick={(e) => {
+                e.stopPropagation();
+                deleteTodo(value);
+              }}
             >
               X
             </button>

@@ -9,7 +9,6 @@ export const Container = styled.div`
 
 export const CalendarContainer = styled.div`
   width: 700px;
-  height: 700px;
   /* position: absolute; */
   border: 1px solid black;
   margin: 0 auto;

@@ -91,6 +91,21 @@ export default function DateModal(props: PropsType) {
     dispatch(setCalendarList(calendarResult));
     dispatch(setSelectedDate(resultTodoObj));
   };
+
+  const deleteTodo = (value: TodoT) => {
+    const copied = { ...selectedDate };
+    copied["todo"] = copied.todo.filter((list) => list.key !== value.key);
+
+    const result: any = { ...initialSelectDate };
+    if (!!selectedDate.key) {
+      result[selectedDate.key] = {
+        ...copied,
+      };
+      dispatch(setCalendarList(result));
+      dispatch(setSelectedDate(copied));
+    }
+  };
+
   return (
     open && (
       <ModalBackground className="modal-bg" onClick={(e) => closeModal(e)}>
@@ -151,11 +166,29 @@ export default function DateModal(props: PropsType) {
           />
           <div>
             <textarea
+              value={dateInfo.content}
               onChange={(e) => handleDateInfo(e.target.value, "content")}
               onBlur={(e) => callDispatch()}
             />
           </div>
-          <div>{info.content}</div>
+          <button
+            style={{
+              background: "none",
+              color: "red",
+              position: "absolute",
+              bottom: 5,
+              left: 0,
+              textDecoration: "underline",
+              border: "none",
+              cursor: "pointer",
+            }}
+            onClick={() => {
+              deleteTodo(info);
+              setModalOpen(false);
+            }}
+          >
+            삭제하기
+          </button>
         </ModalContainer>
       </ModalBackground>
     )
