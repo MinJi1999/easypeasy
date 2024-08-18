@@ -28,5 +28,5 @@ export function sortList(arr: TodoT[]) {
     copiedTodo["key"] = idx;
     return copiedTodo;
   });
-  return arrayKey;`
+  return arrayKey;
 }
