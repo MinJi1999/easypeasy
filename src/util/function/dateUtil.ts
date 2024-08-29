@@ -22,7 +22,8 @@ export function sortList(arr: TodoT[]) {
   const copied = [...arr];
   copied.sort((a, b) => {
     return a.time < b.time ? -1 : 1;
-  });
+  }); // 다중 정렬 체크했을 떄 체크한 거 최상단 혹은 최하단으로
+  // 
   const arrayKey = copied.map((todo, idx) => {
     const copiedTodo = { ...todo };
     copiedTodo["key"] = idx;
