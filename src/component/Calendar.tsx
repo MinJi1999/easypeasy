@@ -29,45 +29,23 @@ interface DateObjectT {
 export default function Calendar() {
   const dispatch = useAppDispatch();
   // 현재 날짜 ex) 12
-  // const [date, setDate] = useState(0);
   const [year, setYear] = useState(0);
   const [month, setMonth] = useState(0);
 
   // 현재 month의 총 일수
   const [wholeDates, setWholeDates] = useState<DateObjectT>({});
-  const [showLanding, setShowLanding] = useState(false);
   const selectedDate = useAppSelector((state) => state.calendar.selectedDate);
 
   useEffect(() => {
     setInitial();
     settingLocalStorage();
-    if (checkShowLanding()) {
-      setShowLanding(true);
-    }
   }, []);
-
-  const checkShowLanding = () => {
-    const isLandingCheck = localStorage.getItem("epLandingModalShow");
-    if (!!isLandingCheck) {
-      const parsed = JSON.parse(isLandingCheck);
-      const savedDate = parsed.date;
-      const isOff = parsed.value === "off";
-      const today = returnDateTime();
-      if (savedDate !== today.date) {
-        localStorage.removeItem("epLandingModalShow");
-      }
-      if (isOff) {
-        return false;
-      } else return true;
-    } else return true;
-  };
 
   // 초기 날짜 세팅
   const setInitial = () => {
     const day = new Date();
     const year = day.getFullYear();
     const month = day.getMonth();
-    const date = day.getDate();
     setYear(year);
     setMonth(month + 1);
     // setDate(date);
@@ -186,9 +164,6 @@ export default function Calendar() {
         </DaysContainer>
         {/* <input type="datetime-local" onChange={(e) => console.log(e, "e")} /> */}
       </CalendarContainer>
-      {showLanding && selectedDate.todo.length ? (
-        <Landing setShowLanding={setShowLanding} />
-      ) : null}
     </Container>
   );
 }
